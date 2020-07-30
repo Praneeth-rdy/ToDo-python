@@ -12,12 +12,14 @@ def select_option_lo(connection, existing_users):
 
     # Asking user for an option
     print('Select any of the following options:')
-    option = input('1) {}\n2) {}\n3) {}\n'.format('SignIn', 'SignUp', 'quit'))
+    option = input('1) {}\n2) {}\n3) {}\n4) {}\n'.format('SignIn', 'SignUp', 'RemoveUser', 'quit'))
     if option == '1':
         users.sign_in(connection, existing_users)
     elif option == '2':
         users.sign_up(connection, existing_users)
     elif option == '3':
+        users.remove_user(connection, existing_users)
+    elif option == '4':
         return
     else:
         print('Invalid option chosen! Please retry!\n')

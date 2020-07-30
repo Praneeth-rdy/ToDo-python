@@ -1,13 +1,25 @@
 import main
 
+def remove_user(connection, existing_users):
+    username = input('Enter the username to be removed: ')
+    if username in [user[1] for user in existing_users]:
+        connection.cursor().execute('DELETE FROM users WHERE name = ?', (username,))
+        connection.commit()
+        existing_users = [row for row in connection.cursor().execute('SELECT * FROM users')]
+        print('User {} removed!\n'.format(username))
+        main.select_option_lo(connection, existing_users)
+    else:
+        print('User not found! Please retry!\n')
+        main.select_option_lo(connection, existing_users)
 
+# Prints all existing users
 def print_users(existing_users):
     if len(existing_users) == 0:
-        print('No existing users found!\n')
+        print('No existing users found!')
     else:
         print('Existing users are:')
         for user_tuple in existing_users:
-            print('{}) {}'.format(user_tuple[0], user_tuple[1]))
+            print('{} {}'.format('=>', user_tuple[1]))
 
 # Returns username if loggedin else None
 def logged_in_user(connection):
@@ -21,7 +33,7 @@ def logged_in_user(connection):
 def sign_up(connection, existing_users):
     new_user = input('Please enter a username to create a user:\n')
     if new_user not in [user[1] for user in existing_users]:
-        existing_users.append((len(existing_users)+1,new_user))
+        existing_users.append((len(existing_users)+1, new_user, 'None'))
         connection.cursor().execute('INSERT INTO users(name, tasks) VALUES(?,?)', (new_user, 'None'))
         connection.commit()
         print("User sign up successful! Now try 'signing in' using the registered username.\n")
